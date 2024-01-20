@@ -31,16 +31,36 @@
   margin-bottom: 15px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: left; /* Align text to the left for proposal details */
+  text-align: left;
 }
 
 .proposal-item p {
-  margin: 10px 0; /* Add some spacing between text lines */
+  margin: 10px 0;
   font-size: 16px;
 }
 
 .vote-btn {
   display: block;
   margin: 10px auto;
-  width: fit-content; /* Make the button size fit its content */
+  width: fit-content;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .app-container {
+    padding: 10px;
+  }
+
+  .proposal-item {
+    font-size: 14px; /* Smaller font for mobile */
+  }
+
+  .connect-wallet-btn, .vote-btn {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+
+  .proposals-list {
+    margin-top: 20px;
+  }
 }

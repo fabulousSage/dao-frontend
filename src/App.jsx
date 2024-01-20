@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import getDAOContract from './DAOContract';
-import './App.css'; 
+import './App.css';
 
 function App() {
   const [proposals, setProposals] = useState([]);
@@ -13,6 +13,7 @@ function App() {
       try {
         const contract = await getDAOContract();
         setDaoContract(contract);
+        fetchProposals(); // Fetch proposals on component mount
       } catch (error) {
         console.error('Error initializing DAO Contract:', error);
       }
@@ -52,12 +53,12 @@ function App() {
   };
 
   const voteOnProposal = async (proposalId) => {
-    if (!daoContract) return;
+    if (!daoContract || !account) return;
 
     setLoading(true);
     try {
       await daoContract.methods.voteOnProposal(proposalId).send({ from: account });
-      fetchProposals();
+      fetchProposals(); // Refresh proposals after voting
     } catch (error) {
       console.error('Error voting on proposal:', error);
     }
@@ -76,22 +77,20 @@ function App() {
 
       {loading && <p>Loading...</p>}
 
-      {account && daoContract && (
-        <div className="proposals-list">
-          <h2>Proposals</h2>
-          {proposals.map(proposal => (
-            <div className="proposal-item" key={proposal.id}>
-              <p>{proposal.description} - Votes: {proposal.voteCount}</p>
-              <p>Vote Percentage: {proposal.votePercentage}%</p>
-              {!proposal.executed && (
-                <button className="vote-btn" onClick={() => voteOnProposal(proposal.id)}>
-                  Vote
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="proposals-list">
+        <h2>Proposals</h2>
+        {proposals.map(proposal => (
+          <div className="proposal-item" key={proposal.id}>
+            <p>{proposal.description} - Votes: {proposal.voteCount}</p>
+            <p>Vote Percentage: {proposal.votePercentage}%</p>
+            {account && !proposal.executed && (
+              <button className="vote-btn" onClick={() => voteOnProposal(proposal.id)}>
+                Vote
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
